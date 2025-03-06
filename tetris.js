@@ -33,6 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 現在のテトリミノ
     let currentPiece = null;
     let nextPiece = null;
+    let ghostPiece = null;
     
     // テトリミノの色
     const colors = [
@@ -101,9 +102,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // テトリミノを生成
     function createPiece(type) {
         return {
-            pos: {x: boardWidth / 2 - 2, y: 0},
+            pos: {x: Math.floor(boardWidth / 2) - 1, y: 0},
             type: type,
-            matrix: pieces[type],
+            matrix: JSON.parse(JSON.stringify(pieces[type])),
             ghost: false
         };
     }
@@ -211,9 +212,8 @@ document.addEventListener('DOMContentLoaded', () => {
             merge(currentPiece, board);
             resetPiece();
             clearLines();
-            updateScore();
+            dropCounter = 0;
         }
-        dropCounter = 0;
     }
     
     // テトリミノをハードドロップ（一気に落下）
@@ -227,7 +227,6 @@ document.addEventListener('DOMContentLoaded', () => {
         merge(currentPiece, board);
         resetPiece();
         clearLines();
-        updateScore();
         dropCounter = 0;
     }
     
@@ -236,7 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // ゴーストピースの位置をリセット
         ghostPiece = {
             pos: {x: currentPiece.pos.x, y: currentPiece.pos.y},
-            matrix: [...currentPiece.matrix.map(row => [...row])],
+            matrix: JSON.parse(JSON.stringify(currentPiece.matrix)),
             type: currentPiece.type,
             ghost: true
         };
@@ -304,11 +303,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    // スコアの更新
-    function updateScore() {
-        scoreElement.textContent = score;
-    }
-    
     // キャンバスをクリア
     function clearCanvas() {
         ctx.fillStyle = '#111';
@@ -329,6 +323,8 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // テトリミノを描画
     function drawPiece(piece) {
+        if (!piece) return;
+        
         piece.matrix.forEach((row, y) => {
             row.forEach((value, x) => {
                 if (value !== 0) {
@@ -349,9 +345,32 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
+    // グリッドを描画
+    function drawGrid() {
+        ctx.strokeStyle = '#333';
+        ctx.lineWidth = 0.5;
+        
+        // 縦線
+        for (let x = 0; x <= boardWidth; x++) {
+            ctx.beginPath();
+            ctx.moveTo(x * gridSize, 0);
+            ctx.lineTo(x * gridSize, boardHeight * gridSize);
+            ctx.stroke();
+        }
+        
+        // 横線
+        for (let y = 0; y <= boardHeight; y++) {
+            ctx.beginPath();
+            ctx.moveTo(0, y * gridSize);
+            ctx.lineTo(boardWidth * gridSize, y * gridSize);
+            ctx.stroke();
+        }
+    }
+    
     // ゲームオーバー画面の描画
     function drawGameOver() {
         clearCanvas();
+        drawGrid();
         drawBoard();
         
         ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
@@ -369,6 +388,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // スタート画面の描画
     function drawStart() {
         clearCanvas();
+        drawGrid();
         
         ctx.fillStyle = 'white';
         ctx.font = '20px Arial';
@@ -390,9 +410,9 @@ document.addEventListener('DOMContentLoaded', () => {
         levelElement.textContent = '1';
         linesElement.textContent = '0';
         
-        currentPiece = null;
-        nextPiece = null;
-        resetPiece();
+        nextPiece = randomPiece();
+        currentPiece = randomPiece();
+        updateGhost();
         
         clearCanvas();
         drawStart();
@@ -410,11 +430,16 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             clearCanvas();
+            drawGrid();
             drawBoard();
-            drawPiece(ghostPiece);
+            if (ghostPiece) {
+                drawPiece(ghostPiece);
+            }
             drawPiece(currentPiece);
         } else if (gameOver) {
             drawGameOver();
+        } else {
+            drawStart();
         }
         
         requestAnimationFrame(update);
@@ -499,6 +524,4 @@ document.addEventListener('DOMContentLoaded', () => {
     // ゲームの初期化と開始
     resetGame();
     update();
-    
-    let ghostPiece = null;
 });
