@@ -59,9 +59,28 @@
                 display: block;
             }
         }
+        .nav {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+        .nav a {
+            margin-right: 15px;
+            color: #333;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .nav a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
+    <div class="nav">
+        <a href="index.html">スネークゲーム</a>
+        <a href="tetris.html">テトリスゲーム</a>
+    </div>
+
     <h1>スネークゲーム</h1>
     <canvas id="gameCanvas" width="400" height="400"></canvas>
     <div class="game-info">
