@@ -1,7 +1,7 @@
-# Test Project
+# mcp_github_handling_test
 
 ## 概要
-これはテスト用のプロジェクトリポジトリです。GitHub APIの動作確認や機能テストのために作成されました。
+これはGitHub APIのテスト用リポジトリです。GitHub APIの動作確認や機能テストのために作成されました。
 
 ## 機能
 - 基本的なGitHub操作の検証
@@ -10,14 +10,21 @@
 
 ## ゲーム
 このリポジトリには以下のブラウザゲームが含まれています：
-1. **スネークゲーム** - 古典的なスネークゲームの実装
-2. **テトリスゲーム** - クラシックなテトリスゲームの実装
+1. **スネークゲーム** - 古典的なスネークゲームの実装 (index.htmlとsnake.js)
+2. **テトリスゲーム** - クラシックなテトリスゲームの実装 (tetris.htmlとtetris.js)
 
 ## 使い方
 このリポジトリは以下のように利用できます：
-1. リポジトリをクローン: `git clone https://github.com/noricha-vr/test_project.git`
+1. リポジトリをクローン: `git clone https://github.com/noricha-vr/mcp_github_handling_test.git`
 2. 必要な変更を加える
 3. 変更をプッシュして動作を確認
+
+## ファイル構成
+- `index.html` - スネークゲームのメインページ
+- `snake.js` - スネークゲームのロジック
+- `tetris.html` - テトリスゲームのページ
+- `tetris.js` - テトリスゲームのロジック
+- `.nojekyll` - GitHub Pagesの設定ファイル
 
 ## 操作方法
 ### スネークゲーム
